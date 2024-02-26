@@ -36,8 +36,12 @@ create_csv_category()
 def circle_diagram():
     df = pd.read_csv('books_details_by_category.csv')
     top_categories = df.nlargest(20, 'num_books_in_category')
+    total_books = df['num_books_in_category'].sum()
+    labels = [f"{cat} ({num} - {num/total_books*100:.1f}%)"
+              for cat, num in zip(top_categories['category'], top_categories['num_books_in_category'])]
+   
     plt.figure(figsize=(10, 10))
-    plt.pie(top_categories['num_books_in_category'], labels=top_categories['category'], autopct='%1.1f%%', startangle=140,textprops={'fontsize': 6})
+    plt.pie(top_categories['num_books_in_category'], labels=labels, startangle=140,textprops={'fontsize': 6})
     plt.rcParams.update({'font.size': 15})
     plt.axis('equal')
     plt.title('Top 20 Book Categories by Percentage')
