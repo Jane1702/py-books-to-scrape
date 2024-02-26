@@ -1,7 +1,36 @@
 import requests
 from bs4 import BeautifulSoup
-import csv 
+import csv
+from category import *
 
+def scrape_all_books(base_url):
+    response = requests.get(base_url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        side_category = soup.find("div" , class_ = "side_categories")
+        category2 = side_category.findAll("a")
+        for ele in category2[1:] :
+            category_href = ele.get("href")
+            #print(category_href)
+            parts = category_href.split("/")
+            extracted_path = "/".join(parts[:-1])
+            #print(extracted_path)
+            name_category = parts[-2].split('_')[0]
+            #print(name_category)
+            url = "https://books.toscrape.com/" + extracted_path
+            data = category(url)
+            name_csv = name_category + ".csv"
+            with open(name_csv, 'w', newline='', encoding='utf-8') as csvfile:
+                fieldnames = ['product_page_url', 'universal_product_code [upc]','title','price_including_tax','price_excluding_tax','number_available','product_description','category','review_rating','image_url']
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writeheader()
+
+                for row in data:
+                    writer.writerow(row)
+            print("created" + name_csv)
+            
+
+"""
 def scrape_book_info(base_url):
     data = []
     for i in range(1,51) :
@@ -67,3 +96,6 @@ def save_to_csv(data):
 
 data = scrape_book_info("https://books.toscrape.com")
 save_to_csv(data)
+"""
+
+scrape_all_books("https://books.toscrape.com")

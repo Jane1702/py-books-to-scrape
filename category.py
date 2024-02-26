@@ -11,7 +11,7 @@ def category(base_url):
         if page_tag_class is not None :
             page_tag = page_tag_class.find('li', class_='current')
             page = page_tag.text.strip()
-            print(page[-1])
+            #print(page[-1])
             num_page = int(page[-1])
             for i in range(1,num_page + 1) :
                 url = f"{base_url}/page-{i}.html"
@@ -41,7 +41,7 @@ def category(base_url):
                                     parts = src.split("/")
                                     extracted_path = "/".join(parts[2:])
                                     #print(extracted_path)
-                                    img_url = base_url + "/" +extracted_path
+                                    img_url = "https://books.toscrape.com/" + extracted_path
                                     #print(img_url)
                                     break
                                 
@@ -62,7 +62,7 @@ def category(base_url):
                             category = soup2.find('ul', class_='breadcrumb').findAll('li')[2].text.strip()
                             #print(category)
                             data.append({'product_page_url': url2,'universal_product_code [upc]':upc, 'title': title , 'price_including_tax' : price_including_tax,'price_excluding_tax' :price_excluding_tax , 'number_available' : number_available , 'product_description' : description,'category':category,'review_rating' :review_rating,'image_url':img_url})
-                            print(title)
+                            #print(title)
         else:
             a_tag = soup_page.findAll('a')
             for ele in a_tag : 
@@ -85,7 +85,7 @@ def category(base_url):
                             parts = src.split("/")
                             extracted_path = "/".join(parts[2:])
                             #print(extracted_path)
-                            img_url = base_url + "/" +extracted_path
+                            img_url = "https://books.toscrape.com/"+extracted_path
                             #print(img_url)
                             break
                                 
@@ -103,7 +103,7 @@ def category(base_url):
                     category = soup2.find('ul', class_='breadcrumb').findAll('li')[2].text.strip()
                     #print(category)
                     data.append({'product_page_url': url2,'universal_product_code [upc]':upc, 'title': title , 'price_including_tax' : price_including_tax,'price_excluding_tax' :price_excluding_tax , 'number_available' : number_available , 'product_description' : description,'category':category,'review_rating' :review_rating,'image_url':img_url})
-                    print(title)
+                    #print(title)
             
 
     return data
@@ -111,7 +111,7 @@ def category(base_url):
        
 
 def save_to_csv(data):
-    with open('books.csv', 'w', newline='', encoding='utf-8') as csvfile:
+    with open('category2.csv', 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['product_page_url', 'universal_product_code [upc]','title','price_including_tax','price_excluding_tax','number_available','product_description','category','review_rating','image_url']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -120,5 +120,6 @@ def save_to_csv(data):
             writer.writerow(row)
 
 
-data = category("https://books.toscrape.com/catalogue/category/books/mystery_3")
-#save_to_csv(data)
+#data = category("https://books.toscrape.com/catalogue/category/books/mystery_3")
+data = category("https://books.toscrape.com/catalogue/category/books/travel_2")           
+save_to_csv(data)
